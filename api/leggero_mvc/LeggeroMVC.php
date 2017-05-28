@@ -55,7 +55,9 @@ class LeggeroMVC
     //TODO: Check if we need to move this..
     self::$render_items = [];
     self::$routing = new RoutingLeggero();
-    self::$auto_load = new AutoLoad();
+    self::$auto_load = new AutoLoad(self::$base_path);
+    self::$auto_load->SetPath( self::$paths );
+
 
     // Get Controller and Action
     $controllerName = self::$routing->getController();
@@ -70,9 +72,11 @@ class LeggeroMVC
 
     // Get Controller
     $controllerName = ucfirst($controllerName) . 'Controller';
+    /*
     self::$auto_load->load(
       self::$base_path . 'app/controllers/' . $controllerName
     );
+    */
 
     // Create controller
     $current_controller = new $controllerName();
