@@ -136,19 +136,27 @@ class LeggeroMVC
     $total = count(self::$render_items);
     if($total == 0) return;
 
-    $view = self::$render_items[0]['path'];
-    $params = self::$render_items[0]['params'];
-    $poperties = [];
     ob_start();
-    if($params != null){
-      $poperties['model'] = $params;
-      extract($poperties);
-    }
 
-    $viewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, $view );
-    //print_r($viewPath);
-    //
-    require_once $viewPath;
+    $rendereable_item = self::$render_items[0];
+    if($rendereable_item['type'] === 'view'){
+      $view = $rendereable_item['path'];
+      $params = $rendereable_item['params'];
+      $poperties = [];
+
+      if($params != null){
+        $poperties['model'] = $params;
+        extract($poperties);
+      }
+
+      $viewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, $view );
+      //print_r($viewPath);
+      //
+      require_once $viewPath;
+
+    }else{
+      echo($rendereable_item['val']);
+    }
     return ob_get_flush();
   }
 }
