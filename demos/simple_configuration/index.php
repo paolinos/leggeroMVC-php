@@ -19,8 +19,13 @@ LeggeroMVC::SetPath(
       ]
   )
 );
-//TODO:
-//LeggeroMVC::SetRouting();
+
+//  Add default Route. Only required
+LeggeroMVC::AddRoute( '', 'Main', 'Index', 'Default Routing', true );
+//  Routing to tests
+LeggeroMVC::AddRoute( 'admin/{action}', 'Admin', 'Index' );
+LeggeroMVC::AddRoute( 'logout', 'Main', 'test' );
+
 
 //  Run Leggero MVC :D
 LeggeroMVC::Run();

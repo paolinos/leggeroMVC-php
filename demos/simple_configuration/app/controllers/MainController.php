@@ -10,7 +10,6 @@ class MainController extends LeggeroController
     $model->name = "name here";
 
     $this->View('index', $model);
-    //LeggeroMVC::RenderString($model->name);
   }
 
   public function test(){
@@ -18,7 +17,7 @@ class MainController extends LeggeroController
 
     $ser = new MainService();
     $service->CallService();
-    
+
     LeggeroMVC::RenderString('test action');
   }
 

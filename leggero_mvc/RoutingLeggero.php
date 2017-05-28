@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  */
@@ -7,24 +6,44 @@ class RoutingLeggero
 {
   private $root_path;
 
-  private $controller = "";
-  private $action = "index";
+  private $currentRoute;
+
   private $parameters = [];
+
+  //  Setting Routes
+  private $routesList;
+  private $defaultRoute;
 
   function __construct()
   {
     $root_app = $_SERVER['SCRIPT_NAME'];
     $this->root_path = str_replace("index.php","",$root_app);
 
+    $this->routesList = [];
+    $this->defaultRoute = null;
+
+    $this->currentRoute = new Route('','','','');
+  }
+
+  public function AddRoute($route, $isDefault=false){
+    if($isDefault){
+      $this->defaultRoute = $route;
+    }else{
+      $this->routesList[$route->url] = $route;
+    }
+  }
+
+  public function GetRoute()
+  {
     $fullUrl = $_SERVER['REQUEST_URI'];
     $url_params = explode("?", str_replace($this->root_path,"",$fullUrl));
 
-    if(count($url_params) == 0){
-      return;
-    }
+    if(count($url_params) == 0){ return; }
 
-    $url_structure = explode("/", $url_params[0]);
+    $url = $url_params[0];
+    $url_structure = explode("/", $url);
 
+    $this->currentRoute->url = $url;
 
     $count = count($url_structure);
     $tmpVal = null;
@@ -32,21 +51,41 @@ class RoutingLeggero
       $tmpVal = $this->getVal($url_structure[$iStruc]);
       if($tmpVal != null){
         if($iStruc == 0){
-          $this->controller = $tmpVal;
+          $this->currentRoute->controller = $tmpVal;
         }
         else if($iStruc == 1){
-          $this->action = $tmpVal;
+          $this->currentRoute->action = $tmpVal;
         }
         else{
           $this->parameters[] = $tmpVal;
         }
-      }
-      else{
+      }else{
         // Break!!!! //TODO: Add a better comment
         break;
       }
     }
+
+    //  Search in the route list
+    if(array_key_exists($url, $this->routesList)){
+      $this->currentRoute = $this->routesList[$url];
+      return $this->currentRoute;
+    }else{
+      // Check the default route
+      if($this->defaultRoute != null){
+        if($this->defaultRoute->url === $url){
+          $this->currentRoute = $this->defaultRoute;
+          return $this->currentRoute;
+        }
+      }
+    }
+
+    // Set default action
+    if(empty($this->currentRoute->action)){
+      $this->currentRoute->action = 'index';
+    }
+    return $this->currentRoute;
   }
+
 
   public function getController(){
     return $this->controller;
