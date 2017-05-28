@@ -2,7 +2,7 @@
 
 //-----
 //          Routing
-require_once './api/leggero_mvc/LeggeroMVC.php';
+require_once '../../leggero_mvc/LeggeroMVC.php';
 
 LeggeroMVC::SetPath(
   array(
