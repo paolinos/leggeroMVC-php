@@ -17,6 +17,7 @@ class LeggeroMVCHelper
     $this->layoutProperties = [];
   }
 
+  //  Render layout
   public function Render(){
     ob_start();
 
@@ -40,7 +41,7 @@ class LeggeroMVCHelper
   }
 
   public function RenderScripts(){
-    
+
   }
 
   public function ToDo()
