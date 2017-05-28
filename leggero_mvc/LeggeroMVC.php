@@ -1,9 +1,15 @@
 <?php
 /**
- *
+ * @version    0.1
+ * @author     Pablo
+ * @license    MIT License
+ * @copyright  Pablo
+ * @link
  */
+
 require_once 'AutoLoad.php';
 require_once 'RoutingLeggero.php';
+require_once 'LeggeroController.php';
 
 class LeggeroMVC
 {
@@ -11,8 +17,6 @@ class LeggeroMVC
   private static $auto_load;
 
   private static $render_items;
-  //function __construct() {}
-
 
   private static $paths = array(
     'controller' => './app/controllers/',
@@ -22,6 +26,7 @@ class LeggeroMVC
     'others' => []
   );
 
+  //TODO: Not implemented correclty Yet!
   private static $default_routing = array(
     'name' => 'Default',
     'url' => '{controller}/{action}/{parameters}',
@@ -30,8 +35,22 @@ class LeggeroMVC
   );
 
 
-  public static function SetPath($list){
+  public static function SetPath($pathArray){
+    if(is_array(self::$paths)) self::$paths = (object)self::$paths;
 
+    foreach ($pathArray as $key => $value) {
+      if($key === 'controller'){
+        self::$paths->controller = $value;
+      }else if($key === 'view'){
+        self::$paths->view = $value;
+      }else if($key === 'model'){
+        self::$paths->model = $value;
+      }else if($key === 'helper'){
+        self::$paths->helper = $value;
+      }else if($key === 'others'){
+        self::$paths->others = $value;
+      }
+    }
   }
   public static function SetRouting($list){
 
@@ -51,12 +70,17 @@ class LeggeroMVC
     }
     self::$base_path .= '/';
 
+    if(is_array(self::$paths)) self::$paths = (object)self::$paths;
+
     // Initialize default variables
     //TODO: Check if we need to move this..
     self::$render_items = [];
     self::$routing = new RoutingLeggero();
     self::$auto_load = new AutoLoad(self::$base_path);
-    self::$auto_load->SetPath( self::$paths );
+    self::$auto_load->AddPath( self::$paths->controller );
+    self::$auto_load->AddPath( self::$paths->model );
+    self::$auto_load->AddPath( self::$paths->helper );
+    //self::$auto_load->AddPath( self::$paths->controller );
 
 
     // Get Controller and Action
@@ -69,17 +93,12 @@ class LeggeroMVC
       $actionName = self::$default_routing['action'];
     }
 
-
     // Get Controller
-    $controllerName = ucfirst($controllerName) . 'Controller';
-    /*
-    self::$auto_load->load(
-      self::$base_path . 'app/controllers/' . $controllerName
-    );
-    */
+    $controllerName = ucfirst($controllerName);
+    $controllerClassName = $controllerName . 'Controller';
 
     // Create controller
-    $current_controller = new $controllerName();
+    $current_controller = new $controllerClassName($controllerName);
     // Call action
     call_user_func_array(
       array($current_controller, $actionName),
@@ -90,7 +109,7 @@ class LeggeroMVC
   }
 
 
-  public static function RenderView($path, $parameters){
+  public static function RenderView($path, $parameters = null){
     self::$render_items[] = array(
         'type' => 'view',
         'path' => $path,
@@ -102,13 +121,34 @@ class LeggeroMVC
     self::$render_items[] = array('type' => 'string', 'val' => $val );
   }
 
-
+  //TODO:  Move Render to class
   private static function Render()
   {
+    // is this ok? could we have more than one render?? mmm....
+    /*
     $total = count(self::$render_items);
     for ($i=0; $i < $total; $i++) {
       $item = self::$render_items[$i];
-      echo($item['val']);
+      //echo($item);
+      print_r($item);
     }
+    */
+    $total = count(self::$render_items);
+    if($total == 0) return;
+
+    $view = self::$render_items[0]['path'];
+    $params = self::$render_items[0]['params'];
+    $poperties = [];
+    ob_start();
+    if($params != null){
+      $poperties['model'] = $params;
+      extract($poperties);
+    }
+
+    $viewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, $view );
+    //print_r($viewPath);
+    //
+    require_once $viewPath;
+    return ob_get_flush();
   }
 }

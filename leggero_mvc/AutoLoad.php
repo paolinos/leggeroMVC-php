@@ -20,6 +20,10 @@ class AutoLoad
     });
   }
 
+  public function AddPath($path){
+    $this->class_paths[] = $path;
+  }
+
   /**
    *   Set Paths.
    *  @param $paths should be an array that contain 'controller', 'model', 'helper' values,

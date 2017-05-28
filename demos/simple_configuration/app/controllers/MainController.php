@@ -1,21 +1,16 @@
 <?php
-
-
 /**
  *
  */
-class MainController
+class MainController extends LeggeroController
 {
-  function __construct()
-  {
-  }
-
   public function index(){
 
     $model = new MainModel();
     $model->name = "name here";
 
-    LeggeroMVC::RenderString($model->name);
+    $this->View('index', $model);
+    //LeggeroMVC::RenderString($model->name);
   }
 
   public function test(){

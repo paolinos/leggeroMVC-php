@@ -7,6 +7,17 @@ class LeggeroHandlingErrors
 
   function __construct()
   {
+    /*
+    define('DEBUG_APP',true);
+    if(DEBUG_APP){
+      ini_set('display_errors','On');
+      error_reporting(E_ALL);
+    }else{
+      // Turn off all error reporting
+      ini_set('display_errors','Off');
+      error_reporting(0);
+    }
+    */
     error_reporting(0);
     ini_set('display_errors', 1);
     set_error_handler("ErrorHandler",E_ALL);
