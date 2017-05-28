@@ -20,8 +20,18 @@ class AutoLoad
     });
   }
 
+  /**
+   *    Add Path
+   */
   public function AddPath($path){
     $this->class_paths[] = $path;
+  }
+
+  public function AddArrayPath($arrayPath){
+    $count = count($arrayPath);
+    for ($i=0; $i < $count; $i++) {
+      $this->class_paths[] = $arrayPath[$i];
+    }
   }
 
   /**

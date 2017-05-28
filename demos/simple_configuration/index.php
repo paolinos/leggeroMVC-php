@@ -6,14 +6,17 @@
  */
 require_once '../../leggero_mvc/LeggeroMVC.php';
 
-//  Set
+//  Set path
 LeggeroMVC::SetPath(
   array(
-    'controller' => '/app/controllers/',
+    'controller' => 'app/controllers/',
     'view' => 'app/views/',
-    'model' => '/app/models/',
-    'helper' => '/app/helpers/',
-    'others' => []
+    'model' => 'app/models/',
+    'helper' => 'app/helpers/',
+    'others' => [
+      'app/services/',
+      'app/repositories/'
+      ]
   )
 );
 //TODO:

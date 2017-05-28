@@ -14,6 +14,11 @@ class MainController extends LeggeroController
   }
 
   public function test(){
+    $service = new MainService();
+
+    $ser = new MainService();
+    $service->CallService();
+    
     LeggeroMVC::RenderString('test action');
   }
 

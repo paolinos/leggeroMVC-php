@@ -80,7 +80,7 @@ class LeggeroMVC
     self::$auto_load->AddPath( self::$paths->controller );
     self::$auto_load->AddPath( self::$paths->model );
     self::$auto_load->AddPath( self::$paths->helper );
-    //self::$auto_load->AddPath( self::$paths->controller );
+    self::$auto_load->AddArrayPath( self::$paths->others );
 
 
     // Get Controller and Action
