@@ -63,11 +63,28 @@ class LeggeroMVC
     }
   }
 
+  /**
+    * Add Route, to configure your route.
+    */
   public static function AddRoute($url, $controller, $action, $name=null, $is_default=false){
     if(self::$routing === null){
         self::$routing = new RoutingLeggero();
     }
     self::$routing->AddRoute( new Route($url, $controller, $action, $name), $is_default );
+  }
+
+  /**
+    * Exclude Paths
+    * @param $excludes, array with name and path.
+    */
+  public static function ExcludePaths($excludes){
+    if(self::$routing === null){
+        self::$routing = new RoutingLeggero();
+    }
+    //  TODO: why I need the key? is it less performance??
+    foreach ($excludes as $key => $value) {
+      self::$routing->AddExcludeRoute($value);
+    }
   }
 
 
@@ -148,6 +165,11 @@ class LeggeroMVC
 
     // Get Controller and Action
     $route = self::$routing->GetRoute();
+    if($route->status !== 200){
+      http_response_code($route->status);
+      return;
+    }
+
 
     $controllerName = $route->controller;
     $actionName = $route->action;

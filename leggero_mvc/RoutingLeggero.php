@@ -14,13 +14,19 @@ class RoutingLeggero
   private $routesList;
   private $defaultRoute;
 
+  private $excludeList;
+
   function __construct()
   {
+    //  TODO: receive server parameter in the constructor
     $root_app = $_SERVER['SCRIPT_NAME'];
+
     $this->root_path = str_replace("index.php","",$root_app);
 
     $this->routesList = [];
     $this->defaultRoute = null;
+
+    $this->excludeList = [];
 
     $this->currentRoute = new Route('','','','');
   }
@@ -32,10 +38,15 @@ class RoutingLeggero
       $this->routesList[$route->url] = $route;
     }
   }
+  public function AddExcludeRoute($route){
+    $this->excludeList[] = $route;
+  }
 
   public function GetRoute()
   {
+    //  TODO: receive server parameter in the constructor
     $fullUrl = $_SERVER['REQUEST_URI'];
+
     $url_params = explode("?", str_replace($this->root_path,"",$fullUrl));
 
     if(count($url_params) == 0){ return; }
@@ -44,7 +55,27 @@ class RoutingLeggero
     $url_structure = explode("/", $url);
 
     $this->currentRoute->url = $url;
+    /*
+    //print_r($url);
+    //print_r($this->excludeList);
+    if(in_array($url, $this->excludeList)){
+      $this->currentRoute->status = 400;
+      return $this->currentRoute;
+    }
+    */
+    //print_r($this->excludeList);
+    
+    // Check if there is in the exclude list.
+    foreach($this->excludeList as $excludePath) {
+        $tmpPos = strpos ($url, $excludePath);
+        //echo("<br>url:[$url] - exclude:[$excludePath] - [" . $tmpPos . "]<br>" );
+        if ($tmpPos !== false ){
+          $this->currentRoute->status = 400;
+          return $this->currentRoute;
+        }
+    }
 
+    //  ---
     $count = count($url_structure);
     $tmpVal = null;
     for ($iStruc=0; $iStruc < $count; $iStruc++) {
