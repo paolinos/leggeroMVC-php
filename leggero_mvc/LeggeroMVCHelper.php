@@ -11,13 +11,33 @@ class LeggeroMVCHelper
   private $view;
   private $viewProperties;
 
+  private $absolutePath;
+
   public function __construct( $_layout )
   {
     $this->layout =  $_layout;
     $this->layoutProperties = [];
+    $this->absolutePath = '';
   }
 
-  //  Render layout
+  /**
+    * Set Absolute Path
+    *  @param $_absolutePath, with slash at the end!!
+    */
+  public function SetAbsolutePath($_absolutePath){
+    $this->absolutePath = $_absolutePath;
+  }
+  /**
+    * Get absolute path
+    * @param $path is optional
+    */
+  public function GetPath($path=''){
+    return $this->absolutePath . $path;
+  }
+
+  /**
+    * Render layout
+    */
   public function Render(){
     ob_start();
 
@@ -27,7 +47,7 @@ class LeggeroMVCHelper
     ob_get_flush();
   }
 
-  public function AddView($_view, $_properties=null)
+  public function SetView($_view, $_properties=null)
   {
     $this->view = $_view;
     $this->viewProperties = $_properties;

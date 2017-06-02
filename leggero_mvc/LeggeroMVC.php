@@ -70,10 +70,13 @@ class LeggeroMVC
     self::$routing->AddRoute( new Route($url, $controller, $action, $name), $is_default );
   }
 
+
+  private static $RootPath;
+  private static $AbsolutePath;
+  private static $RelativePath;
+
   public static function Run($path=null)
   {
-    //TODO: Fix problems with Error event handler!!
-
     // Set default path
     if( $path == null){
       self::$base_path = dirname($_SERVER['SCRIPT_FILENAME']);
@@ -81,6 +84,51 @@ class LeggeroMVC
       self::$base_path = $path;
     }
     self::$base_path .= '/';
+
+    //   [REQUEST_SCHEME] => http
+    //  [SERVER_NAME] => localhost
+
+    //print_r($_SERVER);
+    $documentRoot = $_SERVER['DOCUMENT_ROOT'];
+    self::$RootPath = str_replace($documentRoot,"", self::$base_path);
+    //echo("<br>root Path:".self::$RootPath."<br>");
+
+    self::$AbsolutePath = $_SERVER['REQUEST_SCHEME'] . '://'  . $_SERVER['SERVER_NAME'] .self::$RootPath;
+    //echo("<br>Absolute Path:".self::$AbsolutePath."</br>");
+
+    //
+    $requestUri = $_SERVER['REQUEST_URI'];
+    self::$RelativePath = str_replace(self::$RootPath,"", $requestUri);
+    //echo("<br>current Path File:".self::$RelativePath."<br>");
+
+    //  TODO: Check mimetype or extension, to only run framework when is valid
+    /*
+    $content_type_allowed = ['text/html','application/xhtml+xml','application/xml'];
+    $content_type_allowed_total = count($content_type_allowed);
+    $current_content_type = $_SERVER['HTTP_ACCEPT'];
+    print_r($_SERVER);
+    $contentTypeValid = false;
+    for ($i=0; $i < $content_type_allowed_total; $i++) {
+      $tmpContent = $content_type_allowed[$i];
+      if (strpos($current_content_type, $tmpContent)) {
+          $contentTypeValid = true;
+          break;
+      }
+    }
+
+    if($contentTypeValid == false){
+      //print_r($_SERVER);
+      //$uri = $_SERVER['REQUEST_URI'];
+      //echo($uri . "</br>");
+      //echo(self::$base_path. "</br>");
+      //require_once
+      return;
+    }
+    */
+
+    //TODO: Fix problems with Error event handler!!
+    //  Add Error handler here!
+
 
     if(is_array(self::$paths)) self::$paths = (object)self::$paths;
 
@@ -155,9 +203,9 @@ class LeggeroMVC
       print_r($item);
     }
     */
+    // Take the first view and render it
     $total = count(self::$render_items);
     if($total == 0) return;
-
 
     $rendereable_item = self::$render_items[0];
     if($rendereable_item['type'] === 'view'){
@@ -165,17 +213,17 @@ class LeggeroMVC
       $params = $rendereable_item['params'];
       $properties = [];
 
-
       $layoutViewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, 'layout.phtml' );
       $viewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, $view );
 
       $LeggeroMVCHelper = new LeggeroMVCHelper($layoutViewPath);
+      $LeggeroMVCHelper->SetAbsolutePath(self::$AbsolutePath);
 
       $propertiesView = [];
       if($params != null){
         $propertiesView['model'] = $params;
       }
-      $LeggeroMVCHelper->AddView($viewPath, $propertiesView);
+      $LeggeroMVCHelper->SetView($viewPath, $propertiesView);
       $LeggeroMVCHelper->Render();
 
       //$properties['LeggeroMVCHelper'] = $LeggeroMVCHelper;

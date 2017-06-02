@@ -1,0 +1,4 @@
+#Ignore list
+custom.log
+error.log
+/apps

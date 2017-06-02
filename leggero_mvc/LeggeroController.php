@@ -1,6 +1,7 @@
 <?php
 /**
- *
+ *    LeggeroController
+ *    Base controller
  */
 class LeggeroController
 {
@@ -23,5 +24,9 @@ class LeggeroController
                             $view_name,
                             $this->extension_view)
                   , $parameter);
+  }
+
+  protected function Redirect($url){
+    header("Location: $url");
   }
 }
