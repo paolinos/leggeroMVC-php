@@ -15,8 +15,11 @@ class LeggeroMVCHelper
 
   private $dynamic;
 
-  public function __construct( $_layout, $_dynamicProps )
+  private $isProd;
+
+  public function __construct( $_layout, $_dynamicProps, $debug=false )
   {
+    $this->isProd = !$debug;
     $this->dynamic = $_dynamicProps;
 
     $this->layout =  $_layout;
@@ -56,11 +59,13 @@ class LeggeroMVCHelper
     * Render layout
     */
   public function Render(){
-
-    if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
-    	ob_start("ob_gzhandler");
-    else
-    	ob_start();
+    if($this->isProd)
+    {
+      if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
+      	ob_start("ob_gzhandler");
+      else
+      	ob_start();
+    }
 
     extract($this->layoutProperties);
     require_once $this->layout;

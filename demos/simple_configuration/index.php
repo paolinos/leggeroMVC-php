@@ -6,6 +6,10 @@
  */
 require_once '../../leggero_mvc/LeggeroMVC.php';
 
+//  Enable debug to do echo and prints
+// Only Development
+LeggeroMVC::EnableDebug();
+
 //  Set path
 LeggeroMVC::SetPath(
   array(

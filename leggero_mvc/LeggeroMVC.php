@@ -24,6 +24,9 @@ class LeggeroMVC
   //  Items to render
   private static $render_items;
 
+  //
+  private static $isDebug = false;
+
   private static $paths = array(
     'controller' => './app/controllers/',
     'view' => './app/views/',
@@ -41,6 +44,10 @@ class LeggeroMVC
     'action' => 'Index'
   );
   */
+
+  public static function EnableDebug(){
+    self::$isDebug = true;
+  }
 
   /**
    *    Set paths
@@ -238,7 +245,7 @@ class LeggeroMVC
       $layoutViewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, 'layout.phtml' );
       $viewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, $view );
 
-      $LeggeroMVCHelper = new LeggeroMVCHelper($layoutViewPath, $current_controller->ViewProp);
+      $LeggeroMVCHelper = new LeggeroMVCHelper($layoutViewPath, $current_controller->ViewProp, self::$isDebug);
       $LeggeroMVCHelper->SetAbsolutePath(self::$AbsolutePath);
 
 
@@ -248,6 +255,8 @@ class LeggeroMVC
       }
       $LeggeroMVCHelper->SetView($viewPath, $propertiesView);
       $LeggeroMVCHelper->Render();
+
+      $current_controller = null;
 
       //$properties['LeggeroMVCHelper'] = $LeggeroMVCHelper;
 
