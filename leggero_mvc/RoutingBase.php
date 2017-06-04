@@ -19,3 +19,19 @@ class Route
     $this->action = $_action;
   }
 }
+
+class Dynamic
+{
+  private $properties = array();
+
+  public function __get($name)
+  {
+    if (array_key_exists($name, $this->properties)) {
+        return $this->properties[$name];
+    }
+  }
+  public function __set($name, $value)
+  {
+      $this->properties[$name] = $value;
+  }
+}

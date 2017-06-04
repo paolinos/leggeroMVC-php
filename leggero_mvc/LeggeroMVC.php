@@ -190,14 +190,14 @@ class LeggeroMVC
     $controllerClassName = $controllerName . 'Controller';
 
     // Create controller
-    $current_controller = new $controllerClassName($controllerName);
+    $current_controller = new $controllerClassName($controllerName, self::$RootPath);
     // Call action
     call_user_func_array(
       array($current_controller, $actionName),
       self::$routing->getParameters()
     );
 
-    self::Render();
+    self::Render($current_controller);
   }
 
 
@@ -214,7 +214,7 @@ class LeggeroMVC
   }
 
   //TODO:  Move Render to class
-  private static function Render()
+  private static function Render($current_controller)
   {
     // is this ok? could we have more than one render?? mmm....
     /*
@@ -238,8 +238,9 @@ class LeggeroMVC
       $layoutViewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, 'layout.phtml' );
       $viewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, $view );
 
-      $LeggeroMVCHelper = new LeggeroMVCHelper($layoutViewPath);
+      $LeggeroMVCHelper = new LeggeroMVCHelper($layoutViewPath, $current_controller->ViewProp);
       $LeggeroMVCHelper->SetAbsolutePath(self::$AbsolutePath);
+
 
       $propertiesView = [];
       if($params != null){

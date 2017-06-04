@@ -13,8 +13,12 @@ class LeggeroMVCHelper
 
   private $absolutePath;
 
-  public function __construct( $_layout )
+  private $dynamic;
+
+  public function __construct( $_layout, $_dynamicProps )
   {
+    $this->dynamic = $_dynamicProps;
+
     $this->layout =  $_layout;
     $this->layoutProperties = [];
     $this->absolutePath = '';
@@ -35,10 +39,24 @@ class LeggeroMVCHelper
     return $this->absolutePath . $path;
   }
 
+  public function __get($name)
+  {
+    if($name === 'ViewProp'){
+      return $this->dynamic;
+    }
+
+    if (array_key_exists($name, $this->viewProperties)) {
+      return $this->viewProperties[$name];
+    }
+
+    return null;
+  }
+
   /**
     * Render layout
     */
   public function Render(){
+
     if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
     	ob_start("ob_gzhandler");
     else
@@ -65,10 +83,5 @@ class LeggeroMVCHelper
 
   public function RenderScripts(){
 
-  }
-
-  public function ToDo()
-  {
-    return "Todo something";
   }
 }
