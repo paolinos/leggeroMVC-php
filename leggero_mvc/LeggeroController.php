@@ -5,13 +5,19 @@
  */
 class LeggeroController
 {
+  // Default view extension
+  protected $extension_view = 'phtml';
+
+  //  layout to load
+  protected $layout = '';
+
+
   private $path;
   private $controller_name;
   private $controller_classname;
 
-  protected $extension_view = 'phtml';
-
   private $dynamic;
+
 
   function __construct($name,$_path)
   {
@@ -40,8 +46,9 @@ class LeggeroController
                             $this->controller_name,
                             $view_name,
                             $this->extension_view)
-                  , $parameter);
+                  , $parameter , $this->layout, $this->extension_view);
   }
+
 
   protected function Redirect($url, $http_Code=302){
     header("Location: " . $this->path . $url,true,$http_Code);

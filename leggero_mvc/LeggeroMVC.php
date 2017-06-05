@@ -208,11 +208,13 @@ class LeggeroMVC
   }
 
 
-  public static function RenderView($path, $parameters = null){
+  public static function RenderView($path, $parameters = null, $layoutName='layout', $viewExtension='phtml'){
     self::$render_items[] = array(
         'type' => 'view',
         'path' => $path,
-        'params' => $parameters
+        'params' => $parameters,
+        'layout' => $layoutName,
+        'view_ext' => $viewExtension,
     );
   }
 
@@ -242,7 +244,10 @@ class LeggeroMVC
       $params = $rendereable_item['params'];
       $properties = [];
 
-      $layoutViewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, 'layout.phtml' );
+      $layout = $rendereable_item['layout'];
+      $view_ext = $rendereable_item['view_ext'];
+
+      $layoutViewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, $layout . '.' . $view_ext);
       $viewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, $view );
 
       $LeggeroMVCHelper = new LeggeroMVCHelper($layoutViewPath, $current_controller->ViewProp, self::$isDebug);
