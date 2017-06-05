@@ -1,4 +1,5 @@
 #Ignore list
 custom.log
 error.log
+ext.txt
 /apps
