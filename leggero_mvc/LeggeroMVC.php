@@ -245,6 +245,9 @@ class LeggeroMVC
       $properties = [];
 
       $layout = $rendereable_item['layout'];
+      if($layout == ""){
+        $layout = "layout";
+      }
       $view_ext = $rendereable_item['view_ext'];
 
       $layoutViewPath = sprintf ("%s%s%s" , self::$base_path, self::$paths->view, $layout . '.' . $view_ext);
