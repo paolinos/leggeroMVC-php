@@ -13,9 +13,15 @@ class LeggeroMVCHelper
 
   private $absolutePath;
 
+  // Dynamic Properties
   private $dynamic;
 
+  //  is prod or not
   private $isProd;
+
+  // Array with name of scripts js
+  private $script_list;
+
 
   public function __construct( $_layout, $_dynamicProps, $debug=false )
   {
@@ -25,6 +31,8 @@ class LeggeroMVCHelper
     $this->layout =  $_layout;
     $this->layoutProperties = [];
     $this->absolutePath = '';
+
+    $this->script_list = [];
   }
 
   /**
@@ -37,11 +45,17 @@ class LeggeroMVCHelper
   /**
     * Get absolute path
     * @param $path is optional
+    * @return path
     */
   public function GetPath($path=''){
     return $this->absolutePath . $path;
   }
 
+  /**
+    * Get properties in the view using $this->
+    * @param $name: name of the property to get the value
+    * @return value or null if not exist.
+    */
   public function __get($name)
   {
     if($name === 'ViewProp'){
@@ -86,7 +100,18 @@ class LeggeroMVCHelper
     require_once $this->view;
   }
 
-  public function RenderScripts(){
+  public function AddScript($url)
+  {
+    $this->script_list[] = $url;
+  }
 
+  public function RenderScripts(){
+    $total = count($this->script_list);
+    $scriptRendering = '';
+    for ($i=0; $i < $total; $i++) {
+      $src = $this->script_list[$i];
+      $scriptRendering .= '<script type="text/javascript" src="'.$src.'"></script>';
+    }
+    echo($scriptRendering);
   }
 }

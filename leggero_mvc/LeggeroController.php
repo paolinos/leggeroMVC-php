@@ -49,6 +49,11 @@ class LeggeroController
                   , $parameter , $this->layout, $this->extension_view);
   }
 
+  protected function Json($data)
+  {
+    LeggeroMVC::RenderJson(json_encode($data));
+  }
+
 
   protected function Redirect($url, $http_Code=302){
     header("Location: " . $this->path . $url,true,$http_Code);

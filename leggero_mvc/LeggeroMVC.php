@@ -218,8 +218,10 @@ class LeggeroMVC
     );
   }
 
-  public static function RenderString($val){
-    self::$render_items[] = array('type' => 'string', 'val' => $val );
+  public static function RenderJson($val){
+    //self::$render_items[] = array('type' => 'string', 'val' => $val );
+    header('Content-type: application/json');
+    echo($val);
   }
 
   //TODO:  Move Render to class
