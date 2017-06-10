@@ -47,6 +47,7 @@ class RoutingLeggero
     //  TODO: receive server parameter in the constructor
     $fullUrl = $_SERVER['REQUEST_URI'];
 
+    // Remove all get parameters
     $url_params = explode("?", str_replace($this->root_path,"",$fullUrl));
 
     if(count($url_params) == 0){ return; }
@@ -55,16 +56,7 @@ class RoutingLeggero
     $url_structure = explode("/", $url);
 
     $this->currentRoute->url = $url;
-    /*
-    //print_r($url);
-    //print_r($this->excludeList);
-    if(in_array($url, $this->excludeList)){
-      $this->currentRoute->status = 400;
-      return $this->currentRoute;
-    }
-    */
-    //print_r($this->excludeList);
-    
+
     // Check if there is in the exclude list.
     foreach($this->excludeList as $excludePath) {
         $tmpPos = strpos ($url, $excludePath);
@@ -78,6 +70,7 @@ class RoutingLeggero
     //  ---
     $count = count($url_structure);
     $tmpVal = null;
+
     for ($iStruc=0; $iStruc < $count; $iStruc++) {
       $tmpVal = $this->getVal($url_structure[$iStruc]);
       if($tmpVal != null){
@@ -135,9 +128,10 @@ class RoutingLeggero
   //TODO: Add regular expression to check only allowed characters
   private function getVal($val)
   {
-    if(empty($val))
-      return null;
 
-    return strtolower($val);
+    if(isset($val))
+      return strtolower($val);
+
+    return null;
   }
 }
