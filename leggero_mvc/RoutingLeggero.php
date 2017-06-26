@@ -10,6 +10,8 @@ class RoutingLeggero
 
   private $parameters = [];
 
+  private $query_string;
+
   //  Setting Routes
   private $routesList;
   private $defaultRoute;
@@ -50,10 +52,16 @@ class RoutingLeggero
     // Remove all get parameters
     $url_params = explode("?", str_replace($this->root_path,"",$fullUrl));
 
-    if(count($url_params) == 0){ return; }
+    $urlParamTotal = count($url_params);
+    if($urlParamTotal == 0){ return; }
 
     $url = $url_params[0];
     $url_structure = explode("/", $url);
+
+    $this->query_string = "";
+    if($urlParamTotal == 2){
+      $this->query_string = $url_params[1];
+    }
 
     $this->currentRoute->url = $url;
 
@@ -119,6 +127,9 @@ class RoutingLeggero
   }
   public function getParameters(){
     return $this->parameters;
+  }
+  public function getQueryString(){
+    return $this->query_string;
   }
 
   public function addCustomRoute($name,$url,$controller,$action){

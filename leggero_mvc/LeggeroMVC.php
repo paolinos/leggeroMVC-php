@@ -197,14 +197,26 @@ class LeggeroMVC
     $controllerClassName = $controllerName . 'Controller';
 
     // Create controller
-    $current_controller = new $controllerClassName($controllerName, self::$RootPath);
-    // Call action
-    call_user_func_array(
-      array($current_controller, $actionName),
-      self::$routing->getParameters()
-    );
+    $current_controller = new $controllerClassName($controllerName, self::$RootPath, self::$routing->getQueryString());
 
-    self::Render($current_controller);
+    $callableData = array($current_controller, $actionName);
+    if(is_callable($callableData))
+    {
+      // Call action
+      call_user_func_array(
+        $callableData,
+        self::$routing->getParameters()
+      );
+      self::Render($current_controller);
+    }else{
+
+      //TODO: Create Error template and display the page
+      header("HTTP/1.0 404 Not Found");
+      echo "<h1>Ups....Page Not Found</h1>";
+      echo "The page that you have requested could not be found.";
+      exit();
+    }
+
   }
 
 

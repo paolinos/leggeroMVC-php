@@ -18,14 +18,16 @@ class LeggeroMVCHelper
 
   //  is prod or not
   private $isProd;
+  private $useMinFiles;
 
   // Array with name of scripts js
   private $script_list;
 
 
-  public function __construct( $_layout, $_dynamicProps, $debug=false )
+  public function __construct( $_layout, $_dynamicProps, $debug=false, $usemin = false )
   {
     $this->isProd = !$debug;
+    $this->useMinFiles = $usemin;
     $this->dynamic = $_dynamicProps;
 
     $this->layout =  $_layout;
@@ -100,9 +102,15 @@ class LeggeroMVCHelper
     require_once $this->view;
   }
 
+  /**
+   *  Add path script without extension
+   */
   public function AddScript($url)
   {
-    $this->script_list[] = $url;
+    if($this->useMinFiles){
+      $url .= ".min";
+    }
+    $this->script_list[] = $url . ".js";
   }
 
   public function RenderScripts(){

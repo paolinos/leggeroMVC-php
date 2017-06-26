@@ -18,14 +18,17 @@ class LeggeroController
 
   private $dynamic;
 
+  private $query_string;
 
-  function __construct($name,$_path)
+
+  function __construct($name,$_path, $query_string = "")
   {
     $this->dynamic = new Dynamic();
 
     $this->path = $_path;
     $this->controller_name = $name;
     $this->controller_classname = get_class($this);
+    $this->query_string = $query_string;
   }
 
   public function __get($name){
@@ -73,5 +76,9 @@ class LeggeroController
       }
     }
     return $result;
+  }
+
+  protected function GetQueryString(){
+    return $this->query_string;
   }
 }
