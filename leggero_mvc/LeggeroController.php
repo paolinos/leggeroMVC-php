@@ -39,7 +39,7 @@ class LeggeroController
   }
 
   protected function IsPost(){
-    return !empty($_POST);
+    return ($_SERVER['REQUEST_METHOD'] === 'POST' || !empty($_POST));
   }
 
   protected function View($view_name, $parameter=null)
@@ -52,6 +52,16 @@ class LeggeroController
                   , $parameter , $this->layout, $this->extension_view);
   }
 
+  protected function PageView($view_name, $parameter=null)
+  {
+    LeggeroMVC::RenderView(
+                        sprintf("%s/%s.%s",
+                            $this->controller_name,
+                            $view_name,
+                            $this->extension_view)
+                  , $parameter , null, $this->extension_view);
+  }
+
   protected function Json($data)
   {
     LeggeroMVC::RenderJson(json_encode($data));
@@ -62,6 +72,9 @@ class LeggeroController
     header("Location: " . $this->path . $url,true,$http_Code);
     exit;
     //echo("<br>path: " . $this->path . " - url: $url <br>");
+  }
+  protected function GetPath($url){
+     return $this->path . $url;
   }
   protected function RedirectToExternalUrl($url){
     header("Location: $url");

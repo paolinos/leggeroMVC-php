@@ -48,9 +48,17 @@ class AutoLoad
   {
     //TODO: optimize this code
     // We need to check for controllers, models, helpers, and then foreach in other
+    $included = false;
     foreach ($this->class_paths as $key => $value) {
       $url = $this->base_path . $value . $class_name .'.php';
-      if($this->IncludeFile($url))  break;
+      if($this->IncludeFile($url)){
+        $included = true;
+        break;
+      }
+    }
+
+    if($included === false){
+      //echo("Non exist");
     }
   }
 

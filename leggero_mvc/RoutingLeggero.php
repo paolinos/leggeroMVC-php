@@ -58,11 +58,12 @@ class RoutingLeggero
     $url = $url_params[0];
     $url_structure = explode("/", $url);
 
+    /*
     $this->query_string = "";
     if($urlParamTotal == 2){
       $this->query_string = $url_params[1];
-    }
-
+    }*/
+    $this->query_string = $_SERVER['QUERY_STRING'];
     $this->currentRoute->url = $url;
 
     // Check if there is in the exclude list.
